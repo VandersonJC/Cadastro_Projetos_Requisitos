@@ -195,10 +195,20 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
                                       ),
                                     );
                                   },
-                                  child: Icon(Icons.library_books),
+                                  child: Icon(Icons.edit),
                                   style: ElevatedButton.styleFrom(
-                                      primary: Colors.transparent,
+                                      primary: Colors.grey,
                                       shadowColor: Colors.black),
+                                ),
+                                Text('  '),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    deleteAlertDialog(context, 'requisito $index');
+                                  },
+                                  child: Icon(Icons.delete),
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.red,
+                                      shadowColor: Colors.red),
                                 ),
                               ],
                             ),
@@ -225,3 +235,26 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
         ));
   }
 }
+
+deleteAlertDialog(BuildContext context, String text) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Atenção!"),
+          content: Text("Deseja realmente excluir o $text?"),
+          actions: [
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text("Sim"),
+            ),
+            ElevatedButton(
+              onPressed: () {Navigator.pop(context);},
+              child: const Text("Voltar"),
+              style: ElevatedButton.styleFrom(primary: Colors.grey),
+            ),
+          ],
+        );
+      },
+    );
+  }
