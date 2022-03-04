@@ -1,3 +1,4 @@
+import 'package:cadastro_projeto_requerimento/app/control/ProjectControl.dart';
 import 'package:flutter/material.dart';
 
 class ProjectList extends StatelessWidget {
@@ -11,34 +12,54 @@ class ProjectList extends StatelessWidget {
   }
 }
 
-class ProjectListDinamic extends StatefulWidget 
-{
+class ProjectListDinamic extends StatefulWidget {
   const ProjectListDinamic({Key? key}) : super(key: key);
 
   @override
   State<ProjectListDinamic> createState() => _ProjectListDinamic();
 }
 
-class _ProjectListDinamic extends State<ProjectListDinamic>
-{
+class _ProjectListDinamic extends State<ProjectListDinamic> {
   @override
-  Widget build(BuildContext context) 
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-       title: const Text('Projetos'),
+        title: const Text('Projetos'),
       ),
       body: ListView.builder(
-        itemCount: 5,
-        itemBuilder: (BuildContext context,int index)
-        {
-          return ListTile(
-            trailing: Icon(Icons.library_books),
-            title:Text("List item $index"),
-            subtitle: Text("Data final estimada:"+DateTime.now().toString()),
-            );
-        }
-        ),
+          itemCount: 5,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+                padding: const EdgeInsets.only(left: 0),
+                child: Card(
+                    child: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Row(
+                          children: [
+                            Text('Projeto $index'),
+                            Spacer(),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ProjectControl(),
+                                  ),
+                                );
+                              },
+                              child: Icon(Icons.library_books),
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.transparent,
+                                  shadowColor: Colors.black),
+                            ),
+                          ],
+                        ))));
+            // return ListTile(
+            //   trailing: Icon(Icons.library_books),
+            //   title:Text("List item $index"),
+            //   subtitle: Text("Data final estimada:"+DateTime.now().toString()),
+            //   );
+          }),
     );
   }
 }

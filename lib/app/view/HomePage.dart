@@ -43,57 +43,77 @@ class _HomePageDinamic extends State<HomePageDinamic> {
       ),
       body: ListView(
         children: [
-          ListTile(
-            title: Text('Projetos'),
-            leading: Icon(Icons.note_add_outlined),
+          Padding(
+            padding: const EdgeInsets.all(4),
+            child: Card(
+                child: Column(
+              children: [
+                ListTile(
+                  title: Text('Projetos'),
+                  leading: Icon(Icons.note_add_outlined),
+                ),
+                Row(
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ProjectForm(),
+                              ),
+                            );
+                          },
+                          child: const Text('Cadastrar'),
+                        )),
+                    Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ProjectList(),
+                              ),
+                            );
+                          },
+                          child: const Text('Listar'),
+                        )),
+                  ],
+                )
+              ],
+            )),
           ),
-          Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProjectForm(),
-                    ),
-                  );
-                },
-                child: const Text('Cadastrar'),
-              )),
-          Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: ElevatedButton(
-                onPressed: () {
-                    Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProjectList(),
-                    ),
-                  );
-                },
-                child: const Text('Listar'),
-              )),
           new Divider(),
-          ListTile(
-            title: Text('Usuários'),
-            leading: Icon(Icons.group_add),
+          Padding(
+            padding: const EdgeInsets.all(4),
+            child: Card(
+                child: Column(
+              children: [
+                ListTile(
+                  title: Text('Usuarios'),
+                  leading: Icon(Icons.person_add_alt_rounded),
+                ),
+                Row(
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: const Text('Cadastrar'),
+                        )),
+                    Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: const Text('Listar'),
+                        )),
+                  ],
+                )
+              ],
+            )),
           ),
-          Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  return null;
-                },
-                child: const Text('Cadastrar'),
-              )),
-          Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  return null;
-                },
-                child: const Text('Listar'),
-              )),
         ],
       ),
     );
