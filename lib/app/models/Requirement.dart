@@ -13,13 +13,13 @@ const String levelComplexityColumn  = 'level_complexity';
 const String timeWorkEstemeedColumn = 'time_work_estemeed';
 const String refProjectColumn       = 'ref_project';
 
-class ItemHelper
+class ProjectHelper
 {
-  static final ItemHelper _instance = ItemHelper.interal();
+  static final ProjectHelper _instance = ProjectHelper.interal();
 
-  factory ItemHelper() => _instance;
+  factory ProjectHelper() => _instance;
 
-  ItemHelper.interal();
+  ProjectHelper.interal();
 
   Database? _db;
 
@@ -51,15 +51,15 @@ Future<Database> initDb() async
 
 Future<Requirement> saveRequirement(Requirement requirement) async
 {
-  Database dbItem = await db;
-  requirement.id = await dbItem.insert(requirementTable, requirement.toMap());
+  Database dbProject = await db;
+  requirement.id = await dbProject.insert(requirementTable, requirement.toMap());
   return requirement;
 }
 
 Future<Requirement> getRequirement(int id) async
 {
-  Database dbItem = await db;
-  List<Map> maps  = await dbItem.query(requirementTable,
+  Database dbProject = await db;
+  List<Map> maps  = await dbProject.query(requirementTable,
     columns: [idColumn, descriptionColumn, tpRequirementColumn, dtRegisterColumn, dtEndColumn, priorityColumn, levelComplexityColumn, timeWorkEstemeedColumn, refProjectColumn],
      where: "$idColumn = ?",
      whereArgs: [id]);
@@ -77,38 +77,38 @@ Future<Requirement> getRequirement(int id) async
 
 Future<int>deleteRequirement(int id) async
 {
-  Database dbItem = await db;
-  return await dbItem.delete(requirementTable, where: "$idColumn = ?", whereArgs: [id]);
+  Database dbProject = await db;
+  return await dbProject.delete(requirementTable, where: "$idColumn = ?", whereArgs: [id]);
 }
 
 Future<int>updateRequirement(Requirement requirement) async
 {
-  Database dbItem = await db;
-  return await dbItem.update(requirementTable, requirement.toMap() , where: "$idColumn = ?", whereArgs: [requirement.id]);
+  Database dbProject = await db;
+  return await dbProject.update(requirementTable, requirement.toMap() , where: "$idColumn = ?", whereArgs: [requirement.id]);
 }
 
 Future<List<Requirement>> getAllProjects() async
 {
-  Database dbItem = await db;
-  List listMap = await dbItem.rawQuery("SELECT * FROM $requirementTable");
-  List<Requirement> listItems = [];
+  Database dbProject = await db;
+  List listMap = await dbProject.rawQuery("SELECT * FROM $requirementTable");
+  List<Requirement> listProjects = [];
   for(Map m in listMap)
   {
-    listItems.add(Requirement.fromMap(m));
+    listProjects.add(Requirement.fromMap(m));
   }
-  return listItems;
+  return listProjects;
 }
 
 Future<int> getNumber() async
 {
-  Database dbItem = await db;
-  return Sqflite.firstIntValue(await dbItem.rawQuery("SELECT COUNT(*) FROM $requirementTable"))!;
+  Database dbProject = await db;
+  return Sqflite.firstIntValue(await dbProject.rawQuery("SELECT COUNT(*) FROM $requirementTable"))!;
 }
 
 Future close() async
 {
-  Database dbItem = await db;
-  dbItem.close();
+  Database dbProject = await db;
+  dbProject.close();
 }
 
 }

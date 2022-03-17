@@ -10,13 +10,13 @@ const String dtEndColumn         = 'dt_end';
 const String dtEndEsteemedColumn = 'dt_end_esteemed';
 const String refCreatorColumn    = 'ref_creator';
 
-class ItemHelper
+class ProjectHelper
 {
-  static final ItemHelper _instance = ItemHelper.interal();
+  static final ProjectHelper _instance = ProjectHelper.interal();
 
-  factory ItemHelper() => _instance;
+  factory ProjectHelper() => _instance;
 
-  ItemHelper.interal();
+  ProjectHelper.interal();
 
   Database? _db;
 
@@ -48,15 +48,15 @@ Future<Database> initDb() async
 
 Future<Project> saveProject(Project project) async
 {
-  Database dbItem = await db;
-  project.id = await dbItem.insert(projectTable, project.toMap());
+  Database dbProject = await db;
+  project.id = await dbProject.insert(projectTable, project.toMap());
   return project;
 }
 
 Future<Project> getProject(int id) async
 {
-  Database dbItem = await db;
-  List<Map> maps  = await dbItem.query(projectTable,
+  Database dbProject = await db;
+  List<Map> maps  = await dbProject.query(projectTable,
     columns: [idColumn, nameColumn, dtStartColumn, dtEndColumn, dtEndEsteemedColumn, refCreatorColumn],
      where: "$idColumn = ?",
      whereArgs: [id]);
@@ -74,38 +74,38 @@ Future<Project> getProject(int id) async
 
 Future<int>deleteProject(int id) async
 {
-  Database dbItem = await db;
-  return await dbItem.delete(projectTable, where: "$idColumn = ?", whereArgs: [id]);
+  Database dbProject = await db;
+  return await dbProject.delete(projectTable, where: "$idColumn = ?", whereArgs: [id]);
 }
 
 Future<int>updateProject(Project project) async
 {
-  Database dbItem = await db;
-  return await dbItem.update(projectTable, project.toMap() , where: "$idColumn = ?", whereArgs: [project.id]);
+  Database dbProject = await db;
+  return await dbProject.update(projectTable, project.toMap() , where: "$idColumn = ?", whereArgs: [project.id]);
 }
 
 Future<List<Project>> getAllProjects() async
 {
-  Database dbItem = await db;
-  List listMap = await dbItem.rawQuery("SELECT * FROM $projectTable");
-  List<Project> listItems = [];
+  Database dbProject = await db;
+  List listMap = await dbProject.rawQuery("SELECT * FROM $projectTable");
+  List<Project> listProjects = [];
   for(Map m in listMap)
   {
-    listItems.add(Project.fromMap(m));
+    listProjects.add(Project.fromMap(m));
   }
-  return listItems;
+  return listProjects;
 }
 
 Future<int> getNumber() async
 {
-  Database dbItem = await db;
-  return Sqflite.firstIntValue(await dbItem.rawQuery("SELECT COUNT(*) FROM $projectTable"))!;
+  Database dbProject = await db;
+  return Sqflite.firstIntValue(await dbProject.rawQuery("SELECT COUNT(*) FROM $projectTable"))!;
 }
 
 Future close() async
 {
-  Database dbItem = await db;
-  dbItem.close();
+  Database dbProject = await db;
+  dbProject.close();
 }
 
 }
