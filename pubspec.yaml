@@ -28,6 +28,8 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   sqflite: any
+  flutter_slidable: any
+  intl: any
   flutter:
     sdk: flutter
 

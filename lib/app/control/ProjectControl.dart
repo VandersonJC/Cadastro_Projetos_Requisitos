@@ -1,10 +1,9 @@
 import 'package:cadastro_projeto_requerimento/app/control/RequirementForm.dart';
+import 'package:cadastro_projeto_requerimento/app/models/Project.dart';
 import 'package:flutter/material.dart';
 
 class ProjectControl extends StatelessWidget {
   const ProjectControl({Key? key}) : super(key: key);
-
-  static const String _title = 'Flutter Code Sample';
 
   @override
   Widget build(BuildContext context) {
