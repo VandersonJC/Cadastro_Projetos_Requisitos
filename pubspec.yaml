@@ -28,6 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   sqflite: any
+  select_form_field: any
   flutter_slidable: any
   intl: any
   flutter:

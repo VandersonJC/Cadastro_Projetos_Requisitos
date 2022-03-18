@@ -21,20 +21,9 @@ class HomePageDinamic extends StatefulWidget {
 }
 
 class _HomePageDinamic extends State<HomePageDinamic> {
+
   String _text = 'teste';
-  /*int _selectedIndex = 0;
-    PageController pageController = PageController();
-    
-    void opTapped(int index)
-    {
-      setState(() 
-      {
-        _selectedIndex = index;  
-      });
-      pageController.jumpToPage(index);
-    }
-*/
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,8 +38,8 @@ class _HomePageDinamic extends State<HomePageDinamic> {
                 child: Column(
               children: [
                 ListTile(
-                  title: Text('Projetos'),
-                  leading: Icon(Icons.note_add_outlined),
+                  title: Text('Projetos', style: TextStyle(fontSize: 20),),
+                  leading: Icon(Icons.folder, color:Color(0xff00d7f3)),
                 ),
                 Row(
                   children: [
@@ -92,8 +81,8 @@ class _HomePageDinamic extends State<HomePageDinamic> {
                 child: Column(
               children: [
                 ListTile(
-                  title: Text('Usuarios'),
-                  leading: Icon(Icons.person_add_alt_rounded),
+                  title: Text('Usuarios', style: TextStyle(fontSize: 20)),
+                  leading: Icon(Icons.account_circle_rounded, color: Color(0xff00d7f3),),
                 ),
                 Row(
                   children: [
@@ -119,32 +108,3 @@ class _HomePageDinamic extends State<HomePageDinamic> {
     );
   }
 }
-
-
-
-/*
-PageView(
-        controller: pageController,
-        children: 
-        [
-          Container(),
-          Container(),
-          Container()
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: 
-        const <BottomNavigationBarItem> 
-        [ 
-          BottomNavigationBarItem( icon: Icon(Icons.home), label: 'Home', ),
-          BottomNavigationBarItem( icon: Icon(Icons.dock_sharp), label: 'Projetos', ),
-          BottomNavigationBarItem( icon: Icon(Icons.usb_rounded), label: 'Usuários', ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black,
-        onTap: opTapped,
-        // selectedItemColor: Colors.white,
-        // onTap: _onItemTapped,
-      ),
-    */

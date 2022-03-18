@@ -1,19 +1,21 @@
 import 'package:cadastro_projeto_requerimento/app/models/Project.dart';
+import 'package:cadastro_projeto_requerimento/app/models/Requirement.dart';
+import 'package:cadastro_projeto_requerimento/app/util/VDate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
-class ProjectView extends StatelessWidget {
-  const ProjectView(
+class RequirementView extends StatelessWidget {
+  const RequirementView(
       {Key? key,
-      required this.project,
+      required this.requirement,
       required this.onDelete,
       required this.onEdit})
       : super(key: key);
 
-  final Project project;
-  final Function(Project) onDelete;
-  final Function(Project) onEdit;
+  final Requirement requirement;
+  final Function(Requirement) onDelete;
+  final Function(Requirement) onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class ProjectView extends StatelessWidget {
           children: [
             SlidableAction(
               onPressed: (value) {
-                onEdit(project);
+                onEdit(requirement);
               },
               backgroundColor: Color.fromARGB(255, 40, 173, 118),
               foregroundColor: Colors.white,
@@ -33,7 +35,7 @@ class ProjectView extends StatelessWidget {
             ),
             SlidableAction(
               onPressed: (value) {
-                onDelete(project);
+                onDelete(requirement);
               },
               backgroundColor: Color(0xFFFE4A49),
               foregroundColor: Colors.white,
@@ -61,20 +63,29 @@ class ProjectView extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      Icon(Icons.folder, color: Color(0xff00d7f3),),
+                      Icon(Icons.content_paste_rounded, color: Color(0xff00d7f3),),
                       SizedBox(width: 10,),
                       Expanded(child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            '${project.name}',
+                            '${requirement.description}',
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Text('Data final estimada: ${DateFormat('dd/MM/yyyy')
-                            .format(DateTime.parse(project.dt_end_esteemed!))}',
+                          Text('Prioridade: ${requirement.priority}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          Text('Tipo: ${requirement.tp_requirement}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          Text('Registrado em: ${VDate.ConvertDateUsInBr(VDate.ConvertStringInDatetime(requirement.dt_register!), false )}',
                             style: const TextStyle(
                               fontSize: 14,
                             ),

@@ -74,7 +74,7 @@ class _ProjectListDinamic extends State<ProjectListDinamic> {
                           for (Project project in projectList)
                             ProjectView(
                               project: project,
-                              onDelete: (v) {},
+                              onDelete: onDelete,
                               onEdit: onEdit,
                             ),
                         ],
@@ -108,7 +108,7 @@ class _ProjectListDinamic extends State<ProjectListDinamic> {
                       backgroundColor: Color(0xff00d7f3),
                       onPressed: routeNewProject,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 28,
                     )
                   ],
@@ -116,6 +116,41 @@ class _ProjectListDinamic extends State<ProjectListDinamic> {
           ],
         )));
   }
+
+  void onDelete(Project project)
+  {
+    //Paralelo
+    projectSelect    = project;
+    projectSelectPos = projectList.indexOf(project);
+
+    setState(() {
+      // delete in db
+      projectHelper.deleteProject(project.id!);
+
+      // remove in list static
+      projectList.remove(project);
+    });
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        'O projeto ${project.name} foi removido com suceeso!',
+        style: const TextStyle(color: Colors.black),
+      ),
+      backgroundColor: Colors.white,
+      action: SnackBarAction(
+        label: 'Desfazer',
+        textColor: const Color(0xff00d7f3),
+        onPressed: () {
+          setState(() {
+            projectList.insert(projectSelectPos!, project);
+            projectHelper.saveProject(project);
+          });
+        },
+      ),
+    ));
+  }
+
   void routeNewProject()
   {
     Navigator.push(
@@ -131,33 +166,33 @@ class _ProjectListDinamic extends State<ProjectListDinamic> {
         Navigator.push(
         context,
           MaterialPageRoute(
-            builder: (context) => const ProjectControl(),
+            builder: (context) => ProjectControl(edit_project: project,),
           ),
         );
   }
 }
 
-deleteAlertDialog(BuildContext context, String text) {
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text("Atenção!"),
-        content: Text("Deseja realmente excluir o $text?"),
-        actions: [
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text("Sim"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text("Voltar"),
-            style: ElevatedButton.styleFrom(primary: Colors.grey),
-          ),
-        ],
-      );
-    },
-  );
-}
+// deleteAlertDialog(BuildContext context, Project project, onDelete) {
+//   return showDialog(
+//     context: context,
+//     builder: (context) {
+//       return AlertDialog(
+//         title: const Text("Atenção!"),
+//         content: Text("Deseja realmente excluir o ${project.name}?"),
+//         actions: [
+//           ElevatedButton(
+//             onPressed: onDelete,
+//             child: const Text("Sim"),
+//           ),
+//           ElevatedButton(
+//             onPressed: () {
+//               Navigator.pop(context);
+//             },
+//             child: const Text("Voltar"),
+//             style: ElevatedButton.styleFrom(primary: Colors.grey),
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }
