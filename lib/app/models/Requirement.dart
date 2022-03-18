@@ -13,13 +13,13 @@ const String levelComplexityColumn  = 'level_complexity';
 const String timeWorkEstemeedColumn = 'time_work_estemeed';
 const String refProjectColumn       = 'ref_project';
 
-class ProjectHelper
+class RequirementHelper
 {
-  static final ProjectHelper _instance = ProjectHelper.interal();
+  static final RequirementHelper _instance = RequirementHelper.interal();
 
-  factory ProjectHelper() => _instance;
+  factory RequirementHelper() => _instance;
 
-  ProjectHelper.interal();
+  RequirementHelper.interal();
 
   Database? _db;
 
@@ -87,10 +87,17 @@ Future<int>updateRequirement(Requirement requirement) async
   return await dbProject.update(requirementTable, requirement.toMap() , where: "$idColumn = ?", whereArgs: [requirement.id]);
 }
 
-Future<List<Requirement>> getAllProjects() async
+Future<List<Requirement>> getAllRequirements(int? ref_project) async
 {
   Database dbProject = await db;
+  
   List listMap = await dbProject.rawQuery("SELECT * FROM $requirementTable");
+  
+  if( ref_project != null || ref_project != '' || ref_project != 0 )
+  {
+      listMap = await dbProject.rawQuery("SELECT * FROM $requirementTable WHERE ref_project = $ref_project");
+  }
+  
   List<Requirement> listProjects = [];
   for(Map m in listMap)
   {

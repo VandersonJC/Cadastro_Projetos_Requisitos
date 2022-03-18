@@ -5,27 +5,35 @@ import 'package:intl/intl.dart';
 class VDate
 {
 
-static DateTime ConvertDateBrInUs(DateTime dt, Bool fl_horas)
+static String ConvertDateUsInBr(DateTime dt, bool fl_horas)
 {
-  DateTime dt_convert;
+  String dt_convert;
 
-  if( fl_horas == true )
+  if( fl_horas )
   {
-    dt_convert = DateTime.parse(DateFormat('dd/MM/yyyy - HH:mm').format(dt));
+    dt_convert = DateFormat('dd/MM/yyyy - HH:mm').format(dt);
   }
   else
   {
-      dt_convert = DateTime.parse(DateFormat('dd/MM/yyyy').format(dt));
+      dt_convert =DateFormat('dd/MM/yyyy').format(dt);
   }
 
   return dt_convert;
 }
 /**
-  * convert your datetime in string
+  * convert your  string in  datetime
   */
 static DateTime ConvertStringInDatetime(String dt)
 { 
   return DateTime.parse(dt);
+}
+
+/**
+  * convert your strin in string
+  */
+static String ConvertDatetimeInString(DateTime dt)
+{ 
+  return '$dt';
 }
 
 }

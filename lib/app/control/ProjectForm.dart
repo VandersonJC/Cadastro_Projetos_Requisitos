@@ -37,10 +37,22 @@ class _ProjectFormDinamic extends State<ProjectFormDinamic> {
           title: const Text('Cadastrando projeto'),
           // bottom: Button
         ),
-        body: Padding(
+        body: SingleChildScrollView(child: Padding(
             padding: const EdgeInsets.all(5.0),
             child: Column(children: [
-              Card(
+              Container(
+                decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 158, 156, 156),
+                    offset: Offset(1, 1),
+                    blurRadius: 5,
+                    spreadRadius: 1,
+                  )
+                ],
+                color: Colors.white,
+              ),
                 child: Column(
                   children: [
                     SizedBox(
@@ -180,11 +192,25 @@ class _ProjectFormDinamic extends State<ProjectFormDinamic> {
                   ],
                 ),
               ),
-              Padding(
+              Container(
+                margin: const EdgeInsets.all(16),
+                height: 50,
+                width: 150,
+                child: Expanded(child: Padding(
                   padding: const EdgeInsets.only(top: 4.0),
-                  child: RaisedButton(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xff00d7f3),
+                      padding: const EdgeInsets.all(15),
+                    ),
                     child: const Text('Cadastrar'),
                     onPressed: () {
+
+                      if(_con_project_name.text == null )
+                      {
+                        return;
+                      }
+
                       String name = _con_project_name.text;
                       String dt_start = _con_project_dt_start.text;
                       String dt_end = _con_project_dt_end.text;
@@ -217,8 +243,8 @@ class _ProjectFormDinamic extends State<ProjectFormDinamic> {
 
                       returnList();
                     },
-                  )),
-            ])));
+                  )))),
+            ]))));
   }
 
   void returnList()
