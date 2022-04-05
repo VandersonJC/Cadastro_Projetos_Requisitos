@@ -1,15 +1,15 @@
 import 'package:cadastro_projeto_requerimento/app/control/ProjectForm.dart';
+import 'package:cadastro_projeto_requerimento/app/control/UserForm.dart';
 import 'package:cadastro_projeto_requerimento/app/view/ProjectsList.dart';
+import 'package:cadastro_projeto_requerimento/app/view/UserList.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  static const String _title = 'Flutter Code Sample';
-
   @override
   Widget build(BuildContext context) {
-    return HomePageDinamic();
+    return const HomePageDinamic();
   }
 }
 
@@ -21,14 +21,11 @@ class HomePageDinamic extends StatefulWidget {
 }
 
 class _HomePageDinamic extends State<HomePageDinamic> {
-
-  String _text = 'teste';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cadastro de projetos'),
+        title: const Text('Cadastro de projetos'),
       ),
       body: ListView(
         children: [
@@ -37,9 +34,12 @@ class _HomePageDinamic extends State<HomePageDinamic> {
             child: Card(
                 child: Column(
               children: [
-                ListTile(
-                  title: Text('Projetos', style: TextStyle(fontSize: 20),),
-                  leading: Icon(Icons.folder, color:Color(0xff00d7f3)),
+                const ListTile(
+                  title: Text(
+                    'Projetos',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  leading: Icon(Icons.folder, color: Color(0xff00d7f3)),
                 ),
                 Row(
                   children: [
@@ -74,28 +74,35 @@ class _HomePageDinamic extends State<HomePageDinamic> {
               ],
             )),
           ),
-          new Divider(),
+          const Divider(),
           Padding(
             padding: const EdgeInsets.all(4),
             child: Card(
                 child: Column(
               children: [
-                ListTile(
+                const ListTile(
                   title: Text('Usuarios', style: TextStyle(fontSize: 20)),
-                  leading: Icon(Icons.account_circle_rounded, color: Color(0xff00d7f3),),
+                  leading: Icon(
+                    Icons.account_circle_rounded,
+                    color: Color(0xff00d7f3),
+                  ),
                 ),
                 Row(
                   children: [
                     Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            UserForm();
+                          },
                           child: const Text('Cadastrar'),
                         )),
                     Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            const UserList();
+                          },
                           child: const Text('Listar'),
                         )),
                   ],
