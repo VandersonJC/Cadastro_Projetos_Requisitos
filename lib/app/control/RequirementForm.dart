@@ -1,7 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cadastro_projeto_requerimento/app/control/ProjectControl.dart';
 import 'package:cadastro_projeto_requerimento/app/models/Project.dart';
 import 'package:cadastro_projeto_requerimento/app/models/Requirement.dart';
 import 'package:cadastro_projeto_requerimento/app/util/VDate.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:select_form_field/select_form_field.dart';
 
@@ -14,9 +20,7 @@ class RequirementForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RequirementFormDinamic(
-      ref_project: ref_project,
-      requirement: requirement
-    );
+        ref_project: ref_project, requirement: requirement);
   }
 }
 
@@ -27,8 +31,8 @@ class RequirementFormDinamic extends StatefulWidget {
   Requirement? requirement;
 
   @override
-  State<RequirementFormDinamic> createState() =>
-      _RequirementFormDinamic(ref_project: ref_project, requirementEdit: requirement);
+  State<RequirementFormDinamic> createState() => _RequirementFormDinamic(
+      ref_project: ref_project, requirementEdit: requirement);
 }
 
 class _RequirementFormDinamic extends State<RequirementFormDinamic> {
@@ -37,9 +41,9 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
 
   final TextEditingController con_desciption = TextEditingController();
   final TextEditingController con_tp_requirement = TextEditingController();
-  String? con_dt_register = VDate.ConvertDatetimeInString(DateTime.now());
-  final TextEditingController con_dt_end     = TextEditingController();
-  final TextEditingController con_priority   = TextEditingController();
+  String? con_dt_register;
+  final TextEditingController con_dt_end = TextEditingController();
+  final TextEditingController con_priority = TextEditingController();
   final TextEditingController con_level_complexity = TextEditingController();
   final TextEditingController con_time_work_estemeed = TextEditingController();
 
@@ -48,13 +52,27 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
   int ref_project;
   Project? project;
 
+  Position? _currentPosition;
+  String? _currentAddress;
+  bool isLoadingLocation = false;
+
   RequirementHelper requirementHelper = RequirementHelper();
   ProjectHelper projectHelper = ProjectHelper();
 
+  FilePickerResult? result;
+  PlatformFile? file;
+  String? file_path;
+
+  FilePickerResult? result2;
+  PlatformFile? file2;
+  String? file2_path;
+
+  File? edit_file1;
+  File? edit_file2;
+
   @override
   void initState() {
-    if( requirementEdit?.id != null ) 
-    {
+    if (requirementEdit?.id != null) {
       onLoad(requirementEdit!);
     }
     projectHelper.getProject(ref_project).then((value) => project = value);
@@ -62,15 +80,52 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
     super.initState();
   }
 
-  void onLoad(Requirement requirement)
-  {
+  void pickFile() async {
+    result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+
+    if (result == null) return;
+
+    file = result!.files.first;
+
+    setState(() {});
+  }
+
+  void pickFile2() async {
+    result2 = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+
+    if (result2 == null) return;
+
+    file2 = result2!.files.first;
+
+    setState(() {});
+  }
+
+  void onLoad(Requirement requirement) {
     setState(() {
       con_desciption.text = requirement.description!;
       con_dt_end.text = requirement.dt_end!;
       con_time_work_estemeed.text = requirement.time_work_estemeed!;
       con_tp_requirement.text = requirement.tp_requirement!;
       con_priority.text = requirement.priority!;
-      con_level_complexity.text =  requirement.level_complexity!;
+      con_level_complexity.text = requirement.level_complexity!;
+
+      (requirement.dt_register != null)
+          ? con_dt_register = requirement.dt_register
+          : VDate.ConvertDatetimeInString(DateTime.now());
+
+      (requirement.img1 != null) ? file_path = requirement.img1 : null;
+      (requirement.img1 != null)
+          ? edit_file1 = File(requirement.img1.toString())
+          : null;
+
+      (requirement.img2 != null) ? file2_path = requirement.img2 : null;
+      (requirement.img2 != null)
+          ? edit_file2 = File(requirement.img2.toString())
+          : null;
     });
   }
 
@@ -78,7 +133,7 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Cadastro de requisitos'),
+          title: const Text('Cadastro de requisitos'),
         ),
         body: SingleChildScrollView(
             child: Padding(
@@ -106,7 +161,7 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                             child: TextFormField(
                               controller: con_desciption,
                               decoration: InputDecoration(
-                                label: Text('Descrição'),
+                                label: const Text('Descrição'),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide:
@@ -138,8 +193,10 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                                 icon: Icon(Icons.arrow_drop_down),
                                 labelText: 'Tipo',
                                 items: getItemsType(),
-                                onChanged: (val) => {con_tp_requirement.text = val},
-                                onSaved: (val) => {con_tp_requirement.text = val!},
+                                onChanged: (val) =>
+                                    {con_tp_requirement.text = val},
+                                onSaved: (val) =>
+                                    {con_tp_requirement.text = val!},
                                 decoration: InputDecoration(
                                   suffixIcon: Icon(Icons.arrow_drop_down),
                                   label: Text('Tipo'),
@@ -171,7 +228,7 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                               keyboardType: TextInputType.datetime,
                               controller: con_dt_end,
                               decoration: InputDecoration(
-                                label: Text('Data Final'),
+                                label: const Text('Data Final'),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide:
@@ -207,7 +264,7 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                                 onSaved: (val) => {con_priority.text = val!},
                                 decoration: InputDecoration(
                                   suffixIcon: Icon(Icons.arrow_drop_down),
-                                  label: Text('Prioridade'),
+                                  label: const Text('Prioridade'),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15),
                                     borderSide:
@@ -235,14 +292,16 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                               child: SelectFormField(
                                 controller: con_level_complexity,
                                 type: SelectFormFieldType.dropdown,
-                                icon: Icon(Icons.arrow_drop_down),
+                                icon: const Icon(Icons.arrow_drop_down),
                                 labelText: 'Nível de complexidade',
                                 items: getItems(),
-                                onChanged: (val) => {con_level_complexity.text = val},
-                                onSaved: (val) => {con_level_complexity.text = val!},
+                                onChanged: (val) =>
+                                    {con_level_complexity.text = val},
+                                onSaved: (val) =>
+                                    {con_level_complexity.text = val!},
                                 decoration: InputDecoration(
                                   suffixIcon: Icon(Icons.arrow_drop_down),
-                                  label: Text('Nível de complexidade'),
+                                  label: const Text('Nível de complexidade'),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15),
                                     borderSide:
@@ -271,8 +330,8 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                               controller: con_time_work_estemeed,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
-                                label:
-                                    Text('Tempo estimado de trabalho(Minutos)'),
+                                label: const Text(
+                                    'Tempo estimado de trabalho(Minutos)'),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide:
@@ -294,6 +353,115 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 250,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 2,
+                                          blurRadius: 7,
+                                          offset: const Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    height: 200,
+                                    width: 150,
+                                    margin: const EdgeInsets.all(2),
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          (file == null && file_path == null)
+                                              ? const SizedBox(height: 150)
+                                              : (file_path != null)
+                                                  ? Center(
+                                                      child: Image.file(
+                                                        edit_file1!,
+                                                        width: 140,
+                                                        height: 150,
+                                                      ),
+                                                    )
+                                                  : Center(
+                                                      child: Image.file(
+                                                        File(file!.path
+                                                            .toString()),
+                                                        width: 140,
+                                                        height: 150,
+                                                      ),
+                                                    ),
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                pickFile();
+                                              },
+                                              child: const Text('Imagem 1')),
+                                        ],
+                                      ),
+                                    )),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 2,
+                                        blurRadius: 7,
+                                        offset: const Offset(
+                                            0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  height: 200,
+                                  width: 150,
+                                  margin: const EdgeInsets.all(2),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        (file2 == null && file2_path == null)
+                                            ? const SizedBox(height: 150)
+                                            : (file2_path != null)
+                                                ? Center(
+                                                    child: Image.file(
+                                                      edit_file2!,
+                                                      width: 140,
+                                                      height: 150,
+                                                    ),
+                                                  )
+                                                : Center(
+                                                    child: Image.file(
+                                                      File(file2!.path
+                                                          .toString()),
+                                                      width: 140,
+                                                      height: 150,
+                                                    ),
+                                                  ),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              pickFile2();
+                                            },
+                                            child: const Text('Imagem 2')),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -306,12 +474,40 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                               padding: const EdgeInsets.only(top: 4.0),
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    primary: Color(0xff00d7f3),
+                                    primary: const Color(0xff00d7f3),
                                     padding: const EdgeInsets.all(15),
                                   ),
                                   child: const Text('Salvar'),
                                   onPressed: () {
                                     onSave();
+                                  })))),
+                  const SizedBox(height: 25),
+                  Center(
+                    child: (isLoadingLocation == true)
+                        ? const CircularProgressIndicator()
+                        : Padding(
+                            padding: const EdgeInsets.only(left: 15.0),
+                            child: Text(
+                              _currentAddress ?? '',
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ),
+                  ),
+                  Container(
+                      margin: const EdgeInsets.all(10),
+                      height: 50,
+                      width: 150,
+                      child: Expanded(
+                          child: Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 40, 228, 102),
+                                    padding: const EdgeInsets.all(15),
+                                  ),
+                                  child: const Text('Ver localização'),
+                                  onPressed: () {
+                                    initLocation();
                                   })))),
                 ]))));
   }
@@ -321,10 +517,25 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
       String desciption = con_desciption.text;
       String dt_end = con_dt_end.text;
       String time_work_estemeed = con_time_work_estemeed.text;
-      String tp_requirement    = con_tp_requirement.text;
+      String tp_requirement = con_tp_requirement.text;
       String level_complexity = con_level_complexity.text;
       String priority = con_priority.text;
-      String dt_register = con_dt_register!;
+      String? dt_register = (con_dt_register != null)
+          ? con_dt_register
+          : VDate.ConvertDatetimeInString(DateTime.now());
+
+      // new atributes
+      String? pos_geo = '';
+      String? img1 = (file?.path.toString() != null)
+          ? file!.path.toString()
+          : (file_path != null)
+              ? file_path.toString()
+              : '';
+      String? img2 = (file2?.path.toString() != null)
+          ? file2!.path.toString()
+          : (file2_path != null)
+              ? file2_path.toString()
+              : '';
 
       Requirement objRequirement = Requirement();
 
@@ -337,14 +548,16 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
       objRequirement.dt_register = dt_register;
       objRequirement.ref_project = ref_project;
 
-      if( requirementEdit?.id != null )
-      {
+      // new atributes
+      objRequirement.pos_geo = pos_geo;
+      objRequirement.img1 = img1;
+      objRequirement.img2 = img2;
+
+      if (requirementEdit?.id != null) {
         objRequirement.id = requirementEdit!.id;
         objRequirement.dt_register = requirementEdit!.dt_register;
-        requirementHelper.updateRequirement(objRequirement);  
-      }
-      else
-      {
+        requirementHelper.updateRequirement(objRequirement);
+      } else {
         requirementHelper.saveRequirement(objRequirement);
       }
 
@@ -368,17 +581,17 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
       {
         'value': 'Alto',
         'label': 'Alto',
-        'icon': Icon(Icons.circle),
+        'icon': const Icon(Icons.circle),
       },
       {
         'value': 'Medio',
         'label': 'Medio',
-        'icon': Icon(Icons.circle),
+        'icon': const Icon(Icons.circle),
       },
       {
         'value': 'Baixo',
         'label': 'Baixo',
-        'icon': Icon(Icons.circle),
+        'icon': const Icon(Icons.circle),
       },
     ];
     return _items;
@@ -389,14 +602,51 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
       {
         'value': 'Funcional',
         'label': 'Funcional',
-        'icon': Icon(Icons.circle),
+        'icon': const Icon(Icons.circle),
       },
       {
         'value': 'Não funcional',
         'label': 'Não funcional',
-        'icon': Icon(Icons.circle),
+        'icon': const Icon(Icons.circle),
       },
     ];
     return _items;
+  }
+
+  _getAddress() async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        _currentPosition!.latitude,
+        _currentPosition!.longitude,
+      );
+
+      Placemark place = placemarks[0];
+
+      setState(() {
+        _currentAddress =
+            "${place.street}, ${place.postalCode}, ${place.country}";
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void initLocation() async {
+    setState(() {
+      isLoadingLocation = true;
+    });
+
+    await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.best,
+      forceAndroidLocationManager: true,
+    ).then((Position position) {
+      setState(() {
+        _currentPosition = position;
+        _getAddress();
+        isLoadingLocation = false;
+      });
+    }).catchError((e) {
+      print(e);
+    });
   }
 }

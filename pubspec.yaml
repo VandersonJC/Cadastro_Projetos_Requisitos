@@ -31,6 +31,10 @@ dependencies:
   select_form_field: any
   flutter_slidable: any
   intl: any
+  geocoding: any
+  geolocator: any
+  file_picker: any
+  open_file: any
   flutter:
     sdk: flutter
 
