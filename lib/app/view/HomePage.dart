@@ -25,6 +25,7 @@ class _HomePageDinamic extends State<HomePageDinamic> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Cadastro de projetos'),
       ),
       body: ListView(
@@ -93,7 +94,12 @@ class _HomePageDinamic extends State<HomePageDinamic> {
                         padding: const EdgeInsets.all(5.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            UserForm();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UserForm(),
+                              ),
+                            );
                           },
                           child: const Text('Cadastrar'),
                         )),
@@ -101,7 +107,12 @@ class _HomePageDinamic extends State<HomePageDinamic> {
                         padding: const EdgeInsets.all(5.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            const UserList();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const UserList(),
+                              ),
+                            );
                           },
                           child: const Text('Listar'),
                         )),

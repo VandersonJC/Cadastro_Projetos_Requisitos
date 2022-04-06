@@ -73,7 +73,7 @@ class _UserListDinamic extends State<UserListDinamic> {
                   }),
             ),
             Container(
-                decoration: BoxDecoration(color: Colors.white),
+                decoration: const BoxDecoration(color: Colors.white),
                 padding: const EdgeInsets.all(8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -92,10 +92,15 @@ class _UserListDinamic extends State<UserListDinamic> {
                           }
                         }),
                     FloatingActionButton(
-                      child: Icon(Icons.add),
+                      child: const Icon(Icons.add),
                       backgroundColor: Color(0xff00d7f3),
                       onPressed: () {
-                        UserForm();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UserForm(),
+                          ),
+                        );
                       },
                     ),
                     const SizedBox(

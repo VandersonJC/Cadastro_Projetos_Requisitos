@@ -190,7 +190,7 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                               child: SelectFormField(
                                 controller: con_tp_requirement,
                                 type: SelectFormFieldType.dropdown,
-                                icon: Icon(Icons.arrow_drop_down),
+                                icon: const Icon(Icons.arrow_drop_down),
                                 labelText: 'Tipo',
                                 items: getItemsType(),
                                 onChanged: (val) =>
@@ -198,8 +198,8 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                                 onSaved: (val) =>
                                     {con_tp_requirement.text = val!},
                                 decoration: InputDecoration(
-                                  suffixIcon: Icon(Icons.arrow_drop_down),
-                                  label: Text('Tipo'),
+                                  suffixIcon: const Icon(Icons.arrow_drop_down),
+                                  label: const Text('Tipo'),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15),
                                     borderSide:
@@ -257,13 +257,13 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                               child: SelectFormField(
                                 controller: con_priority,
                                 type: SelectFormFieldType.dropdown,
-                                icon: Icon(Icons.arrow_drop_down),
+                                icon: const Icon(Icons.arrow_drop_down),
                                 labelText: 'Prioridade',
                                 items: getItems(),
                                 onChanged: (val) => {con_priority.text = val},
                                 onSaved: (val) => {con_priority.text = val!},
                                 decoration: InputDecoration(
-                                  suffixIcon: Icon(Icons.arrow_drop_down),
+                                  suffixIcon: const Icon(Icons.arrow_drop_down),
                                   label: const Text('Prioridade'),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15),
@@ -300,7 +300,7 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                                 onSaved: (val) =>
                                     {con_level_complexity.text = val!},
                                 decoration: InputDecoration(
-                                  suffixIcon: Icon(Icons.arrow_drop_down),
+                                  suffixIcon: const Icon(Icons.arrow_drop_down),
                                   label: const Text('Nível de complexidade'),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15),
@@ -514,12 +514,18 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
 
   void onSave() {
     try {
-      String desciption = con_desciption.text;
-      String dt_end = con_dt_end.text;
-      String time_work_estemeed = con_time_work_estemeed.text;
-      String tp_requirement = con_tp_requirement.text;
-      String level_complexity = con_level_complexity.text;
-      String priority = con_priority.text;
+      String desciption =
+          (con_desciption.text != null) ? con_desciption.text : '';
+      String dt_end = (con_dt_end.text != null) ? con_dt_end.text : '';
+      String time_work_estemeed = (con_time_work_estemeed.text != null)
+          ? con_time_work_estemeed.text
+          : '';
+      String tp_requirement =
+          (con_tp_requirement.text != null) ? con_tp_requirement.text : '';
+      String level_complexity =
+          (con_level_complexity.text != null) ? con_level_complexity.text : '';
+      String priority =
+          (con_priority.text != null) ? con_level_complexity.text : '';
       String? dt_register = (con_dt_register != null)
           ? con_dt_register
           : VDate.ConvertDatetimeInString(DateTime.now());
@@ -648,5 +654,41 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
     }).catchError((e) {
       print(e);
     });
+  }
+
+  showAlertDialog(BuildContext context, int index) {
+    Widget voltarButton = ElevatedButton(
+      child: const Text("Voltar"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    Widget fileButton = ElevatedButton(
+      child: const Text("Galeria"),
+      onPressed: () {
+        (index == 1) ? pickFile() : pickFile2();
+      },
+    );
+
+    Widget cameraButton = ElevatedButton(
+      child: const Text("Câmera"),
+      onPressed: () {
+        (index == 1) ? pickFile() : pickFile2();
+      },
+    );
+    // configura o  AlertDialog
+    AlertDialog alerta = AlertDialog(
+      title: const Text("Info"),
+      content: const Text('Selecione o tipo de input'),
+      actions: [voltarButton, fileButton, cameraButton],
+    );
+    // exibe o dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
   }
 }

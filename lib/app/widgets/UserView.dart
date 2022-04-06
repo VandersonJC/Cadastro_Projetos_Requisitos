@@ -62,7 +62,7 @@ class UserView extends StatelessWidget {
                   child: Row(
                     children: [
                       const Icon(
-                        Icons.folder,
+                        Icons.account_box_rounded,
                         color: Color(0xff00d7f3),
                       ),
                       const SizedBox(
