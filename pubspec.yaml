@@ -35,6 +35,7 @@ dependencies:
   geolocator: any
   file_picker: any
   open_file: any
+  url_launcher: any
   flutter:
     sdk: flutter
 

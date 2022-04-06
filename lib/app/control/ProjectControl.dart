@@ -3,6 +3,7 @@ import 'package:cadastro_projeto_requerimento/app/models/Project.dart';
 import 'package:cadastro_projeto_requerimento/app/models/Requirement.dart';
 import 'package:cadastro_projeto_requerimento/app/widgets/RequirementView.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProjectControl extends StatelessWidget {
   ProjectControl({required this.edit_project});
@@ -38,8 +39,8 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
   final TextEditingController con_project_dt_end = TextEditingController();
   final TextEditingController con_project_dt_end_estemeed =
       TextEditingController();
-  final TextEditingController con_project_ref_creator =
-      TextEditingController();
+  final TextEditingController con_project_ref_creator = TextEditingController();
+  final TextEditingController con_project_obs = TextEditingController();
 
   List<Requirement> requirementList = [];
 
@@ -66,11 +67,12 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
 
   void onLoad(Project project) {
     setState(() {
-      con_project_name.text     = project.name!;
+      con_project_name.text = project.name!;
       con_project_dt_start.text = project.dt_start!;
-      con_project_dt_end.text   = project.dt_end!;
+      con_project_dt_end.text = project.dt_end!;
       con_project_dt_end_estemeed.text = project.dt_end_esteemed!;
       con_project_ref_creator.text = '${project.ref_creator}';
+      con_project_obs.text = project.obs!;
     });
   }
 
@@ -233,7 +235,7 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
                                       keyboardType: TextInputType.number,
                                       controller: con_project_ref_creator,
                                       decoration: InputDecoration(
-                                        label: Text('Responsável'),
+                                        label: const Text('Responsável'),
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(15),
@@ -258,6 +260,60 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
                                     ),
                                   ),
                                 ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      height: 80,
+                                      width: 275,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: TextFormField(
+                                          keyboardType: TextInputType.text,
+                                          controller: con_project_obs,
+                                          decoration: InputDecoration(
+                                            label: const Text(
+                                                'Link material complementar'),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey[400]!),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey[400]!),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey[400]!),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 55,
+                                      width: 55,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          if (con_project_obs.text != null) {
+                                            openURL(con_project_obs.text);
+                                          }
+                                        },
+                                        child: Icon(
+                                          Icons.remove_red_eye,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ],
                             );
                           } else {
@@ -266,7 +322,7 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
                           }
                         }),
                   )),
-              Divider(height: 20, color: Colors.grey),
+              const Divider(height: 20, color: Colors.grey),
               Container(
                   margin: const EdgeInsets.all(4),
                   height: 50,
@@ -276,7 +332,7 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
                           padding: const EdgeInsets.only(top: 4.0),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              primary: Color.fromARGB(255, 36, 223, 135),
+                              primary: const Color.fromARGB(255, 36, 223, 135),
                               padding: const EdgeInsets.all(15),
                             ),
                             child: const Text('Cadastrar Requisito'),
@@ -294,7 +350,8 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
               Padding(
                   padding: const EdgeInsets.only(top: 4.0),
                   child: FutureBuilder<List<Requirement>>(
-                      future: requirementHelper.getAllRequirements(edit_project.id!),
+                      future: requirementHelper
+                          .getAllRequirements(edit_project.id!),
                       builder: (BuildContext context,
                           AsyncSnapshot<List<Requirement>> snapshot) {
                         if (snapshot.hasData) {
@@ -344,8 +401,8 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
   }
 
   void onDelete(Requirement requirement) {
-  //Paralelo
-    requirementSelect    = requirement;
+    //Paralelo
+    requirementSelect = requirement;
     requirementSelectPos = requirementList.indexOf(requirement);
 
     setState(() {
@@ -376,34 +433,70 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
     ));
   }
 
-  void onEdit(Requirement requirement)
-  {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => RequirementForm(
-            ref_project: edit_project.id!,
-            requirement: requirement,
-          ),
+  void onEdit(Requirement requirement) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RequirementForm(
+          ref_project: edit_project.id!,
+          requirement: requirement,
         ),
-      );
+      ),
+    );
+  }
+
+  void openURL(String url) async {
+    final newUrl = 'https:$url';
+    if (await canLaunch(newUrl)) {
+      await launch(newUrl,
+          forceSafariVC: true, forceWebView: true, enableJavaScript: true);
+    } else {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Não foi possivel acessar o link $url',
+          style: const TextStyle(color: Colors.red),
+        ),
+        backgroundColor: Colors.white,
+      ));
+    }
   }
 
   void onSave() {
-    String name            = con_project_name.text;
-    String dt_start        = con_project_dt_start.text;
-    String dt_end          = con_project_dt_end.text;
-    String dt_end_estemeed = con_project_dt_end_estemeed.text;
-    int    ref_creator     = int.parse(con_project_ref_creator.text);
+    String name = (con_project_name.text != null) ? con_project_name.text : '';
+    String dt_start =
+        (con_project_dt_start.text != null) ? con_project_dt_start.text : '';
+    String dt_end =
+        (con_project_dt_end.text != null) ? con_project_dt_end.text : '';
+
+    String dt_end_estemeed = (con_project_dt_end_estemeed.text != null)
+        ? con_project_dt_end_estemeed.text
+        : '';
+
+    String obs = (con_project_obs.text != null) ? con_project_obs.text : '';
+
+    int? ref_creator = (int.parse(con_project_ref_creator.text) != null)
+        ? int.parse(con_project_ref_creator.text)
+        : null;
 
     edit_project.name = name;
     edit_project.dt_start = dt_start;
     edit_project.dt_end = dt_end;
     edit_project.dt_end_esteemed = dt_end_estemeed;
+    edit_project.obs = obs;
     edit_project.ref_creator = ref_creator;
 
     projectHelper.updateProject(edit_project);
 
     onLoad(edit_project);
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text(
+        'Projeto salvo com suceeso!',
+        style: TextStyle(color: Colors.black),
+      ),
+      backgroundColor: Colors.white,
+    ));
   }
 }

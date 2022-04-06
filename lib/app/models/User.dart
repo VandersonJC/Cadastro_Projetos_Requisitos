@@ -85,6 +85,14 @@ class UserHelper {
         await dbUser.rawQuery("SELECT COUNT(*) FROM $userTable"))!;
   }
 
+  Future<bool> authLogin(String login, String password) async {
+    Database dbUser = await db;
+    List listMap = await dbUser.rawQuery(
+        "SELECT $idColumn FROM $userTable WHERE $loginColumn = '$login' AND $passwordColumn = '$password'");
+
+    return (listMap.length > 0) ? true : false;
+  }
+
   Future close() async {
     Database dbUser = await db;
     dbUser.close();
