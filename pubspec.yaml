@@ -36,6 +36,7 @@ dependencies:
   file_picker: any
   open_file: any
   url_launcher: any
+  image_picker: any
   flutter:
     sdk: flutter
 
@@ -68,9 +69,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
-
+    # - images/fundo.jpg
+    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

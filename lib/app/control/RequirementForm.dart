@@ -9,6 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:select_form_field/select_form_field.dart';
 
 class RequirementForm extends StatelessWidget {
@@ -59,16 +60,8 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
   RequirementHelper requirementHelper = RequirementHelper();
   ProjectHelper projectHelper = ProjectHelper();
 
-  FilePickerResult? result;
-  PlatformFile? file;
-  String? file_path;
-
-  FilePickerResult? result2;
-  PlatformFile? file2;
-  String? file2_path;
-
-  File? edit_file1;
-  File? edit_file2;
+  File? file;
+  File? file2;
 
   @override
   void initState() {
@@ -80,28 +73,28 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
     super.initState();
   }
 
-  void pickFile() async {
-    result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
+  void pickFile(ImageSource source) async {
+    final result = await ImagePicker().pickImage(source: source);
 
     if (result == null) return;
 
-    file = result!.files.first;
+    final newFile = File(result.path);
 
-    setState(() {});
+    setState(() {
+      file = newFile;
+    });
   }
 
-  void pickFile2() async {
-    result2 = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
+  void pickFile2(ImageSource source) async {
+    final result = await ImagePicker().pickImage(source: source);
 
-    if (result2 == null) return;
+    if (result == null) return;
 
-    file2 = result2!.files.first;
+    final newFile = File(result.path);
 
-    setState(() {});
+    setState(() {
+      file2 = newFile;
+    });
   }
 
   void onLoad(Requirement requirement) {
@@ -117,15 +110,8 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
           ? con_dt_register = requirement.dt_register
           : VDate.ConvertDatetimeInString(DateTime.now());
 
-      (requirement.img1 != null) ? file_path = requirement.img1 : null;
-      (requirement.img1 != null)
-          ? edit_file1 = File(requirement.img1.toString())
-          : null;
-
-      (requirement.img2 != null) ? file2_path = requirement.img2 : null;
-      (requirement.img2 != null)
-          ? edit_file2 = File(requirement.img2.toString())
-          : null;
+      (requirement.img1 != null) ? file = File(requirement.img1!) : null;
+      (requirement.img2 != null) ? file2 = File(requirement.img2!) : null;
     });
   }
 
@@ -215,8 +201,6 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                                     borderSide:
                                         BorderSide(color: Colors.grey[400]!),
                                   ),
-                                  // filled: true,
-                                  // fillColor: Colors.white,
                                 ),
                               )),
                         ),
@@ -280,8 +264,6 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                                     borderSide:
                                         BorderSide(color: Colors.grey[400]!),
                                   ),
-                                  // filled: true,
-                                  // fillColor: Colors.white,
                                 ),
                               )),
                         ),
@@ -317,8 +299,6 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                                     borderSide:
                                         BorderSide(color: Colors.grey[400]!),
                                   ),
-                                  // filled: true,
-                                  // fillColor: Colors.white,
                                 ),
                               )),
                         ),
@@ -381,27 +361,18 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          (file == null && file_path == null)
+                                          (file == null)
                                               ? const SizedBox(height: 150)
-                                              : (file_path != null)
-                                                  ? Center(
-                                                      child: Image.file(
-                                                        edit_file1!,
-                                                        width: 140,
-                                                        height: 150,
-                                                      ),
-                                                    )
-                                                  : Center(
-                                                      child: Image.file(
-                                                        File(file!.path
-                                                            .toString()),
-                                                        width: 140,
-                                                        height: 150,
-                                                      ),
-                                                    ),
+                                              : Center(
+                                                  child: Image.file(
+                                                    file!,
+                                                    width: 140,
+                                                    height: 150,
+                                                  ),
+                                                ),
                                           ElevatedButton(
                                               onPressed: () {
-                                                pickFile();
+                                                showFileDialog(context, 1);
                                               },
                                               child: const Text('Imagem 1')),
                                         ],
@@ -431,27 +402,19 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        (file2 == null && file2_path == null)
+                                        (file2 == null)
                                             ? const SizedBox(height: 150)
-                                            : (file2_path != null)
-                                                ? Center(
-                                                    child: Image.file(
-                                                      edit_file2!,
-                                                      width: 140,
-                                                      height: 150,
-                                                    ),
-                                                  )
-                                                : Center(
-                                                    child: Image.file(
-                                                      File(file2!.path
-                                                          .toString()),
-                                                      width: 140,
-                                                      height: 150,
-                                                    ),
-                                                  ),
+                                            : Center(
+                                                child: Image.file(
+                                                  file2!,
+                                                  width: 140,
+                                                  height: 150,
+                                                ),
+                                              ),
                                         ElevatedButton(
                                             onPressed: () {
-                                              pickFile2();
+                                              showFileDialog(context, 2);
+                                              // pickFile2(ImageSource.camera);
                                             },
                                             child: const Text('Imagem 2')),
                                       ],
@@ -532,16 +495,8 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
 
       // new atributes
       String? pos_geo = '';
-      String? img1 = (file?.path.toString() != null)
-          ? file!.path.toString()
-          : (file_path != null)
-              ? file_path.toString()
-              : '';
-      String? img2 = (file2?.path.toString() != null)
-          ? file2!.path.toString()
-          : (file2_path != null)
-              ? file2_path.toString()
-              : '';
+      String? img1 = (file?.path != null) ? file!.path : '';
+      String? img2 = (file2?.path != null) ? file2!.path : '';
 
       Requirement objRequirement = Requirement();
 
@@ -656,7 +611,7 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
     });
   }
 
-  showAlertDialog(BuildContext context, int index) {
+  showFileDialog(BuildContext context, int index) {
     Widget voltarButton = ElevatedButton(
       child: const Text("Voltar"),
       onPressed: () {
@@ -667,17 +622,25 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
     Widget fileButton = ElevatedButton(
       child: const Text("Galeria"),
       onPressed: () {
-        (index == 1) ? pickFile() : pickFile2();
+        (index == 1)
+            ? pickFile(ImageSource.gallery)
+            : pickFile2(ImageSource.gallery);
+
+        Navigator.pop(context);
       },
     );
 
     Widget cameraButton = ElevatedButton(
       child: const Text("Câmera"),
       onPressed: () {
-        (index == 1) ? pickFile() : pickFile2();
+        (index == 1)
+            ? pickFile(ImageSource.camera)
+            : pickFile2(ImageSource.camera);
+
+        Navigator.pop(context);
       },
     );
-    // configura o  AlertDialog
+    // configura o Dialog
     AlertDialog alerta = AlertDialog(
       title: const Text("Info"),
       content: const Text('Selecione o tipo de input'),
