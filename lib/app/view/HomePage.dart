@@ -21,6 +21,10 @@ class HomePageDinamic extends StatefulWidget {
 }
 
 class _HomePageDinamic extends State<HomePageDinamic> {
+  Image fundo = Image.asset(
+    "assets/images/logo.png",
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,100 +32,109 @@ class _HomePageDinamic extends State<HomePageDinamic> {
         automaticallyImplyLeading: false,
         title: const Text('Cadastro de projetos'),
       ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(4),
-            child: Card(
-                child: Column(
-              children: [
-                const ListTile(
-                  title: Text(
-                    'Projetos',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  leading: Icon(Icons.folder, color: Color(0xff00d7f3)),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ProjectForm(),
-                              ),
-                            );
-                          },
-                          child: const Text('Cadastrar'),
-                        )),
-                    Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ProjectList(),
-                              ),
-                            );
-                          },
-                          child: const Text('Listar'),
-                        )),
-                  ],
-                )
-              ],
-            )),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/images/fundo.jpg'),
+            fit: BoxFit.fill,
           ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(4),
-            child: Card(
-                child: Column(
-              children: [
-                const ListTile(
-                  title: Text('Usuarios', style: TextStyle(fontSize: 20)),
-                  leading: Icon(
-                    Icons.account_circle_rounded,
-                    color: Color(0xff00d7f3),
+          shape: BoxShape.circle,
+        ),
+        child: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: Card(
+                  child: Column(
+                children: [
+                  const ListTile(
+                    title: Text(
+                      'Projetos',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    leading: Icon(Icons.folder, color: Color(0xff00d7f3)),
                   ),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => UserForm(),
-                              ),
-                            );
-                          },
-                          child: const Text('Cadastrar'),
-                        )),
-                    Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const UserList(),
-                              ),
-                            );
-                          },
-                          child: const Text('Listar'),
-                        )),
-                  ],
-                )
-              ],
-            )),
-          ),
-        ],
+                  Row(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ProjectForm(),
+                                ),
+                              );
+                            },
+                            child: const Text('Cadastrar'),
+                          )),
+                      Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ProjectList(),
+                                ),
+                              );
+                            },
+                            child: const Text('Listar'),
+                          )),
+                    ],
+                  )
+                ],
+              )),
+            ),
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: Card(
+                  child: Column(
+                children: [
+                  const ListTile(
+                    title: Text('Usuarios', style: TextStyle(fontSize: 20)),
+                    leading: Icon(
+                      Icons.account_circle_rounded,
+                      color: Color(0xff00d7f3),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UserForm(),
+                                ),
+                              );
+                            },
+                            child: const Text('Cadastrar'),
+                          )),
+                      Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const UserList(),
+                                ),
+                              );
+                            },
+                            child: const Text('Listar'),
+                          )),
+                    ],
+                  )
+                ],
+              )),
+            ),
+          ],
+        ),
       ),
     );
   }

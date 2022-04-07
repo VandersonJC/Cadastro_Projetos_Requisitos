@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:cadastro_projeto_requerimento/app/control/RequirementForm.dart';
 import 'package:cadastro_projeto_requerimento/app/models/Project.dart';
 import 'package:cadastro_projeto_requerimento/app/models/Requirement.dart';
 import 'package:cadastro_projeto_requerimento/app/widgets/RequirementView.dart';
-import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProjectControl extends StatelessWidget {
