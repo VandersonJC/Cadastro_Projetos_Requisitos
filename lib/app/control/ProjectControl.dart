@@ -103,7 +103,7 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
                                     child: TextFormField(
                                       controller: con_project_name,
                                       decoration: InputDecoration(
-                                        label: Text('Nome'),
+                                        label: const Text('Nome'),
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(15),
@@ -306,7 +306,7 @@ class _ProjectControlDinamic extends State<ProjectControlDinamic> {
                                             openURL(con_project_obs.text);
                                           }
                                         },
-                                        child: Icon(
+                                        child: const Icon(
                                           Icons.remove_red_eye,
                                           color: Colors.white,
                                         ),
