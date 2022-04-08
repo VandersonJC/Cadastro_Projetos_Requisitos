@@ -643,7 +643,7 @@ class _RequirementFormDinamic extends State<RequirementFormDinamic> {
     // configura o Dialog
     AlertDialog alerta = AlertDialog(
       title: const Text("Info"),
-      content: const Text('Selecione o tipo de input'),
+      content: const Text('Selecione como quer importar a imagem'),
       actions: [voltarButton, fileButton, cameraButton],
     );
     // exibe o dialog
